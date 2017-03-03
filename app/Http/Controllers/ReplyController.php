@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Comment;
+use App\Http\Requests; 
 use App\Post;
+use App\Reply;
 use Session;
 
-class CommentsController extends Controller
+class ReplyController extends Controller
 {
     public function __construct()
     {
@@ -24,24 +24,15 @@ class CommentsController extends Controller
     public function store(Request $request, $post_id)
     {
         $this->validate($request, array( 
-            'comment'   =>  'required|min:1|max:2000'
+            'Reply'   =>  'required|min:1|max:2000'
         ));
         $post = Post::find($post_id);
-        $comment = new Comment();
-        if(isset(Auth::user()->name)){
-    		$comment->name = Auth::user()->name; 
-        } else {
-	        $this->validate($request, array(
-	            'name'      =>  'required|max:255'
-            ));
-        	$comment->name = $request->name; 
-        }
-        
-        $comment->comment = $request->comment;
-        $comment->approved = true;
-        $comment->post()->associate($post);
-        $comment->save();
-        Session::flash('success', 'Comment was added');
+        $Reply = new Reply(); 
+        $Reply->name = Auth::user()->name; 
+        $Reply->reply = $request->Reply; 
+        $Reply->comment_id = $request->comment_id; 
+        $Reply->save();
+        Session::flash('success', 'Reply was added');
         return redirect('posts/'.$post_id);
     }
     /**
@@ -52,8 +43,8 @@ class CommentsController extends Controller
      */
     public function edit($id)
     {
-        $comment = Comment::find($id);
-        return view('comments.edit')->withComment($comment);
+        $Reply = Reply::find($id);
+        return view('Replys.edit')->withReply($Reply);
     }
     /**
      * Update the specified resource in storage.
@@ -64,20 +55,19 @@ class CommentsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $comment = Comment::find($id);
-        $this->validate($request, array('comment' => 'required'));
-        $comment->comment = $request->comment;
-        $comment->save();
-        Session::flash('success', 'Comment updated');
-        return redirect()->route('posts.show', $comment->post->id);
+        $Reply = Reply::find($id);
+        $this->validate($request, array('Reply' => 'required'));
+        $Reply->Reply = $request->Reply;
+        $Reply->save();
+        Session::flash('success', 'Reply updated');
+        return redirect()->route('posts.show', $Reply->post->id);
     }
-    
     public function delete($id)
     {
-        $comment = Comment::find($id);
-        $post_id = $comment->post->id;
-        $comment->delete();
-        Session::flash('success', 'Deleted Comment');
+        $Reply = Reply::find($id);
+        $post_id = $Reply->post->id;
+        $Reply->delete();
+        Session::flash('success', 'Deleted Reply');
         return redirect()->route('posts.show', $post_id);
     }
     /**
@@ -88,10 +78,10 @@ class CommentsController extends Controller
      */
     public function destroy($id)
     {
-        $comment = Comment::find($id);
-        $post_id = $comment->post->id;
-        $comment->delete();
-        Session::flash('success', 'Deleted Comment');
+        $Reply = Reply::find($id);
+        $post_id = $Reply->post->id;
+        $Reply->delete();
+        Session::flash('success', 'Deleted Reply');
         return redirect()->route('posts.show', $post_id);
     }
 }
