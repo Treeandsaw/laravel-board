@@ -98,73 +98,7 @@
 					{{ Form::close() }}
 				</div>
 			</div>	 
-
-			<div id="backend-comments" style="margin-top: 50px;">
-				<h3>Comments <small>{{ $post->comments()->count() }} total</small></h3>
-
-				<table class='table'> 
-					<tr>
-						<th class="active">No.</th>
-						<th class="active">Name</th> 
-						<th class="active">Comment</th>
-						<th class="active" width="160px"></th>
-					</tr> 
-					@foreach ($post->comments as $comment)
-					<tr>
-						<td class="info">{{ $comment->id }}.</td> 
-						<td class="info">{{ $comment->name }}</td> 
-						<td class="info">{{ $comment->comment }}</td>
-						<td class="info">
-							<a onclick="toggle_visibility({{ $comment->id }});" class="btn btn-primary btn-xs">Reply</a>
-							<a href="{{ route('comments.edit', $comment->id) }}" class="btn btn-success btn-xs">Edit</a>
-							<a href="{{ route('comments.delete', $comment->id) }}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?')">Remove</a>
-						</td>
-					</tr>  
-					@foreach ($replies as $reply)
-					@if($comment->id==$reply->comment_id)
-					<tr>
-						<td>   </td>
-						<td class="warning"> {{ $reply->name }} </td>
-						<td class="warning"> {{ $reply->Reply }} </td>
-						<td class="warning"> {{ $reply->created_at }} </td> 
-					</tr> 
-					@endif
-					@endforeach 
-					<tr>
-						<td></td>
-						<td></td>
-						<td colspan="2">
-							<div id="{{ $comment->id }}" style="display: none;">
-								<div id="comment-form">
-									<div class="lead">ㄴ Add Reply </div>
-									{{ Form::open(['route' => ['reply.store', $post->id], 'method' => 'post']) }}
-										<div class="row"> 
-								            {{ Form::hidden('comment_id', $comment->id, ['class' => 'form-control']) }}
-
-											@if( !$auth )
-
-											<div class="col-md-6">
-						 						{{ Form::label('name', "Name :") }}
-												{{ Form::text('name', null, ['class' => 'form-control']) }}  
-											</div>
-
-											@endif
-
-											<div class="col-md-12 form-spacing-top">
-												{{ Form::textarea('Reply', null, ['class' => 'form-control', 'rows' => '5']) }}
-											</div>
-											<div class="col-md-12">
-												{{ Form::submit('Post Reply', ['class' => 'btn btn-warning btn-block form-spacing-top']) }}
-											</div>
-										</div>
-									{{ Form::close() }}
-								</div> 
-							</div>
-						</td>
-					</tr>
-					@endforeach 
-				</table>
-			</div>
+ 
 		</div>  
 
 	</div>

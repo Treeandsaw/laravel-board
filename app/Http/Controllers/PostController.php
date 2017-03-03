@@ -22,12 +22,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        return 'posts';
-    }
+        $posts = Post::orderBy('id', 'desc')->paginate(10); 
 
-    public function indexx()
-    {
-        return 'plz';
+        return view('posts.index')->with('posts', $posts);
     }
 
     /**
