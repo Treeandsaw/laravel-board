@@ -44,7 +44,7 @@
 					    	</a>                	
 		                @endif
 					</td>
-					<td><h2>{{ $post->title }}</h2></td>
+					<td><a href="{{ route('posts.show', $post->id) }}"><h2>{{ $post->title }}</h2></a></td>
 					<td>{{ $post->author }}</td>
 					<td>{{ date('M j, Y' , strtotime($post->created_at))}}</td> 
 				</tr>
